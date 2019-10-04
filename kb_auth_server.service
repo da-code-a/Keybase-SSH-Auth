@@ -1,0 +1,17 @@
+#This file should be modified to fit your environment on
+#the server running the auth server.
+#This should be a user-level service and running as the user
+#logged in to your Keybase bot.
+
+[Unit]
+Description=Service Worker to run KB SSH Auth Server
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory = /home/ubuntu/kb-ssh-auth
+ExecStart = /home/ubuntu/kb-ssh-auth/env/bin/uwsgi --ini /home/ubuntu/kb-ssh-auth/wsgi.ini
+Restart=always
+
+[Install]
+WantedBy=default.target

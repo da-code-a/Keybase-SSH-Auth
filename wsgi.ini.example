@@ -1,0 +1,8 @@
+[uwsgi]
+module = main:app
+master = true
+processes = 3
+socket = /tmp/kb_ssh_auth.sock
+chmod = 666
+vacuum = true
+die-on-term = true
