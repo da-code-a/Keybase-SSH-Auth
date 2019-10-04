@@ -9,24 +9,28 @@
 #Modify anything encased in <CARROT_BRACKETS> to match your
 #individual set-up.
 
+PATH=/bin:/usr/bin
+ 
 if [ "$PAM_TYPE" != "close_session" ]; then
     KB_AUTH_URL=<http:// or https:// address to your auth server>
     KB_AUTH_TOKEN=<The auth token set in your environment on the auth server>
     SERVER_NAME=<The name you would like to identify this server as in chat>
 
-    MSG_ID=`curl -X POST -d user=$PAM_USER -d server=$SERVER_NAME -d remote=$PAM_RHOST -d token=$KB_AUTH_TOKEN "$KB_AUTH_URL/request"`
-    START_TIME=`date +'%s'`
+    MSG_ID=$(curl -X POST -d user=$PAM_USER -d server=$SERVER_NAME -d remote=$PAM_RHOST -d token=$KB_AUTH_TOKEN "$KB_AUTH_URL/request")
+    START=$(date +%s)
     while :
     do
-        if  (( ( `date +'%s'` - $NOW ) >= 15 )); then
+        NOW=$(date +%s)
+        DIFF=$(( $NOW - $START ))
+        if  (( $DIFF >= 15 )); then
             curl -X POST -d token=$KB_AUTH_TOKEN -d msg_id=$MSG_ID "$KB_AUTH_URL/timeout"
             exit 1
         fi
-        STATUS=`curl -X GET "$KB_AUTH_URL/$MSG_ID?token=$KB_AUTH_TOKEN"`
-        if [ "$STATUS" -eq "approved" ]; then
+        STATUS=$(curl -X GET "$KB_AUTH_URL/$MSG_ID?token=$KB_AUTH_TOKEN")
+        if [ "$STATUS" = "approved" ]; then
             exit 0
         fi
-        if [ "$STATUS" -eq "denied" ]; then
+        if [ "$STATUS" = "denied" ]; then
             exit 1
         fi
     done
