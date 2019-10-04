@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 #This script should be placed in /usr/bin/ and made executable
 #on every server you'd like to protect.
@@ -26,7 +26,7 @@ if [ "$PAM_TYPE" != "close_session" ]; then
             curl -X POST -d token=$KB_AUTH_TOKEN -d msg_id=$MSG_ID "$KB_AUTH_URL/timeout"
             exit 1
         fi
-        STATUS=$(curl -X GET "$KB_AUTH_URL/$MSG_ID?token=$KB_AUTH_TOKEN")
+        STATUS=$(curl -X GET "$KB_AUTH_URL/check/$MSG_ID?token=$KB_AUTH_TOKEN")
         if [ "$STATUS" = "approved" ]; then
             exit 0
         fi
