@@ -69,37 +69,40 @@ def send_auth_request(server: str, remote: str, username: str) -> int:
 
 def find_first_reaction(id: int) -> tuple:
     """
-    This function finds the first Approve or Deny
-    reaction to a request message and returns
-    the decision. If no valid reactions are
-    found, return nothing.
+    This function finds the reactions to
+    the given request message ID and returns
+    the earliest 
     Thanks to @dxb on Keybase for teaching
     about the msgpack method of getting
     messages by ID in Keybase's chat API.
     """
-    encoded = b64encode(packb(id)).decode()
-    msgs_since = chat._send_chat_api(chat,{
+    encoded = b64encode(packb(id-1)).decode()
+    reactions = chat._send_chat_api(chat,{
         "method" : "read",
         "params" : {
             "options" : {
                 "channel" : channel,
                 "pagination" : {
                     "previous" : encoded,
-                    "num" : 9999999 #A ridiculous number because we need all messages
+                    "num" : 1
                 }
             }
         }
-    })['result']['messages']
-    for msg in msgs_since:
-        if msg['msg']['sender']['username'] == bot_name:
-            continue
-        if msg['msg']['content']['type'] == 'reaction':
-            reaction = msg['msg']['content']['reaction']
-            if reaction['m'] == id and reaction['b'] == 'Approve':
-                return ('approved', msg['msg']['sender']['username'])
-            elif reaction['m'] == id and reaction['b'] == "Deny":
-                return ('denied', msg['msg']['sender']['username'])
-    return (None, None)
+    })['result']['messages'][0]['msg']['reactions']['reactions']
+    approves = reactions['Approve']
+    denies = reactions['Deny']
+    del approves[bot_name]
+    del denies[bot_name]
+    if len(approves) == 0 and len(denies) == 0:
+        return (None, None)
+    else:
+        a = {}
+        for i in approves:
+            a['approved,'+i] = approves[i]['reactionMsgID']
+        for i in denies:
+            a['denied,'+i] = denies[i]['reactionMsgID']
+        return tuple(min(a).split(','))
+        
 
 def send_decision(timed: bool, decider: str, decision: str, user: str, host: str, remote: str, msgid: int) -> None:
     """
