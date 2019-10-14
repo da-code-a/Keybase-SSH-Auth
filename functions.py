@@ -13,12 +13,21 @@ from base64 import b64encode
 
 load_dotenv()
 
-channel = {
-    "name" : environ["KB_TEAM"] + ".ssh_auth",
-    "members_type" : "team"
-}
-
 bot_name = chat._get_username(chat)
+
+if environ.get('KB_TYPE') == 'team':
+    channel = {
+        "name" : environ["KB_TEAM"],
+        "members_type" : "team",
+        "topic_name" : environ.get("KB_CHANNEL") or "general"
+    }
+elif environ.get('KB_TYPE') == 'private':
+    channel = {
+        "name" : f'{bot_name},{environ["KB_USER"]}'
+    }
+else:
+    print("You must specifcy either 'private' or 'team' as KB_TYPE in your environment.")
+    exit(1)
 
 def send_auth_request(server: str, remote: str, username: str) -> int:
     """
