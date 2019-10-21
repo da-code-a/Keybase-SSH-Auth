@@ -1,0 +1,12 @@
+.env
+env
+.vscode
+__pycache__
+example.env
+data.db
+.git
+.gitignore
+LICENSE
+README.md
+wsgi.ini.example
+kb_*
