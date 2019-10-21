@@ -8,7 +8,7 @@ RUN useradd -ms /bin/bash keybaseuser
 USER keybaseuser
 WORKDIR /home/keybaseuser
 RUN git clone https://github.com/DonaldKBrown/Keybase-SSH-Auth
-RUN keybase oneshot -u $KEYBASE_USERNAME --paperkey $KEYBASE_PAPERKEY
+RUN keybase oneshot -u $KEYBASE_USERNAME --paperkey "$KEYBASE_PAPERKEY"
 RUN cd Keybase-SSH-AUTH
 RUN virtualenv -p `which python3` env
 RUN source env/bin/activate
