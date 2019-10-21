@@ -5,3 +5,4 @@ COPY models.py /models.py
 COPY requirements.txt /requirements.txt
 RUN pip install -r requirements.txt
 RUN python3 main.py
+EXPOSE 5000
