@@ -1,5 +1,5 @@
 FROM ubuntu
-ENV KEYBASE_ALLOW_ROOT=$KEYBASE_ALLOW_ROOT
+ENV KEYBASE_ALLOW_ROOT=1
 RUN apt update
 RUN apt install -y curl python3 python3-dev python3-pip
 RUN curl --remote-name https://prerelease.keybase.io/keybase_amd64.deb
