@@ -20,6 +20,32 @@ Additionally, it can be used for individuals just trying to keep an eye on their
 
 Basically, it's for anyone who wants to use it. Easy enough, right?
 
+Docker Set-up
+==
+
+You can now run the autentication server in Docker. The target systems (servers/hosts you'd like to secure with this) still require copying of the pam client script, but that's easy enough and doesn't have any real dependencies. To get this going on Docker, simply run:
+
+```
+docker run \
+-e KB_TYPE={team or private} \
+-e KB_TEAM={your team name if using KB_TYPE team} \
+-e KB_CHANNEL={your team channel if using KB_TYPE team, suggested: general} \
+-e KB_USER={Target Keybase user to receive messages if using KB_TYPE private} \
+-e AUTH_TOKEN={Your desired auth password for request} \
+-e FLASK_ENV={development or production} \
+-e KEYBASE_USERNAME={your bot's username} \
+-e KEYBASE_PAPERKEY={a paperkey associated with your bot} \
+-p 5000:5000 \
+donaldkbrown214/keybasedmfa
+```
+
+Alternatively, you can use something like cockpit or any other front-end for managing Docker containers to set this up. Personally, I use cockpit because it just makes everything nice and easy.
+
+Please note that not all environment variables are needed. Refer to the [environment](#environment) for more information.
+
+Non-Docker Set-up
+==
+
 Requirements
 --
 
