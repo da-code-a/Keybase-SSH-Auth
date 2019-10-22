@@ -1,4 +1,4 @@
 #!/bin/bash
 
-keybase oneshot -u $KEYBASE_USERNAME --paperkey $KEYBASE_PAPERKEY
+keybase oneshot
 python3 /main.py
